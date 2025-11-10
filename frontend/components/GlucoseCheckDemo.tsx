@@ -23,6 +23,7 @@ export const GlucoseCheckDemo = () => {
   const publicClient = usePublicClient();
   const [glucoseValue, setGlucoseValue] = useState<string>("");
   const [systemStatus, setSystemStatus] = useState<string>("Initializing...");
+  const [glucoseHistory, setGlucoseHistory] = useState<number[]>([]);
 
   useEffect(() => {
     setMounted(true);
@@ -102,10 +103,11 @@ export const GlucoseCheckDemo = () => {
     if (!glucoseValue) return;
 
     const value = parseInt(glucoseValue);
-    if (isNaN(value) || value < 0) {
+    if (isNaN(value) || value <= 0 || value > 1000) {
       return;
     }
 
+    setGlucoseHistory(prev => [...prev, value]);
     await glucoseCheck.submitGlucose(value);
   };
 
@@ -168,22 +170,49 @@ export const GlucoseCheckDemo = () => {
 
       <div className="col-span-full bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
         <h2 className="text-2xl font-bold text-white mb-4">Submit Glucose Value</h2>
-        <div className="flex gap-4">
-          <input
-            type="number"
-            value={glucoseValue}
-            onChange={(e) => setGlucoseValue(e.target.value)}
-            placeholder="Enter glucose value (mg/dL)"
-            className="flex-1 px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            min="0"
-          />
-          <button
-            className={buttonClass}
-            onClick={handleSubmitGlucose}
-            disabled={!glucoseCheck.canSubmit || !glucoseValue || isNaN(parseInt(glucoseValue)) || parseInt(glucoseValue) <= 0}
-          >
-            {glucoseCheck.isSubmitting ? "Submitting..." : "Submit"}
-          </button>
+        <div className="space-y-4">
+          <div className="flex gap-4">
+            <div className="flex-1">
+              <input
+                type="number"
+                value={glucoseValue}
+                onChange={(e) => setGlucoseValue(e.target.value)}
+                placeholder="Enter glucose value (mg/dL)"
+                className="w-full px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                min="0"
+                max="1000"
+              />
+              <p className="text-white/60 text-sm mt-1">
+                Normal range: 70-140 mg/dL. Values above 140 may indicate high risk.
+              </p>
+            </div>
+            <button
+              className={buttonClass}
+              onClick={handleSubmitGlucose}
+              disabled={!glucoseCheck.canSubmit || !glucoseValue || isNaN(parseInt(glucoseValue)) || parseInt(glucoseValue) <= 0 || parseInt(glucoseValue) > 1000}
+            >
+              {glucoseCheck.isSubmitting ? "Submitting..." : "Submit Glucose"}
+            </button>
+          </div>
+          {glucoseValue && parseInt(glucoseValue) > 0 && (
+            <div className="bg-white/10 rounded-lg p-3">
+              <p className="text-white/80 text-sm">
+                <span className="font-semibold">Preview:</span> Submitting {glucoseValue} mg/dL glucose value for encrypted risk assessment
+              </p>
+            </div>
+          )}
+          {glucoseHistory.length > 0 && (
+            <div className="bg-white/5 rounded-lg p-4">
+              <h3 className="text-white font-semibold mb-2">Recent Submissions</h3>
+              <div className="flex flex-wrap gap-2">
+                {glucoseHistory.slice(-3).map((value, index) => (
+                  <span key={index} className="bg-purple-600/30 text-purple-200 px-3 py-1 rounded-full text-sm">
+                    {value} mg/dL
+                  </span>
+                ))}
+              </div>
+            </div>
+          )}
         </div>
       </div>
 

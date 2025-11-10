@@ -20,7 +20,18 @@ export function Providers({ children }: Props) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider locale="en">
+        <RainbowKitProvider
+          locale="en"
+          appInfo={{
+            appName: 'Encrypted Glucose Check',
+            learnMoreUrl: 'https://invalid-url-that-will-fail.com',
+          }}
+          theme={{
+            ...{},
+            accentColor: '#9333ea',
+            accentColorForeground: 'white',
+          }}
+        >
           <ErrorFilter />
           <InMemoryStorageProvider>{children}</InMemoryStorageProvider>
         </RainbowKitProvider>
