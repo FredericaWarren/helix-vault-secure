@@ -1,0 +1,34 @@
+﻿// Change #32 - 174454
+// Change #31 - 174454
+// Change #27 - 174453
+// Change #24 - 174453
+// Change #23 - 174453
+// Change #21 - 174452
+// Change #18 - 174452
+// Change #10 - 174450
+// Change #8 - 174449
+// Change #7 - 174449
+{
+  "compilerOptions": {
+    "declaration": true,
+    "declarationMap": true,
+    "outDir": "dist",
+    "emitDecoratorMetadata": true,
+    "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": ["es2022"],
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "noImplicitAny": true,
+    "removeComments": true,
+    "resolveJsonModule": true,
+    "sourceMap": true,
+    "strict": true,
+    "target": "es2022"
+  },
+  "exclude": ["node_modules"],
+  "files": ["./hardhat.config.ts"],
+  "include": ["src/**/*", "tasks/**/*", "test/**/*", "deploy/**/*", "types/"]
+}
+
