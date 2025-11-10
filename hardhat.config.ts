@@ -12,6 +12,8 @@ import "solidity-coverage";
 import "./tasks/accounts";
 import "./tasks/GlucoseCheck";
 
+// Task imports for contract management and utility functions
+
 // Run 'npx hardhat vars setup' to see the list of variables that need to be set
 
 const INFURA_API_KEY: string = vars.get("INFURA_API_KEY", "b18fb7e6ca7045ac83c41157ab93f990");
