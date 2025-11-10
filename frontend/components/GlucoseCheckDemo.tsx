@@ -255,6 +255,11 @@ export const GlucoseCheckDemo = () => {
           <p className="text-white/80">
             <span className="font-semibold">Status:</span> {systemStatus}
           </p>
+          {glucoseCheck.contractStats && (
+            <p className="text-white/80">
+              <span className="font-semibold">Threshold:</span> {glucoseCheck.contractStats.threshold} mg/dL
+            </p>
+          )}
         </div>
       </div>
     </div>
