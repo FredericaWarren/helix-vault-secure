@@ -3,10 +3,11 @@
 import { useEffect } from "react";
 
 /**
- * Filters out known console errors that don't affect functionality
- * - Base Account SDK COOP warnings
- * - Coinbase metrics fetch errors
- * - Zama relayer connection errors
+ * Advanced error handling and filtering component
+ * - Filters known console errors that don't affect functionality
+ * - Handles contract interaction errors
+ * - Manages network and connection issues
+ * - Provides user-friendly error messages
  */
 export function ErrorFilter() {
   useEffect(() => {
@@ -45,6 +46,25 @@ export function ErrorFilter() {
         message.includes("relayer-sdk-js.umd.cjs")
       ) {
         return; // Suppress this error
+      }
+
+      // BUG: Over-filtering - suppress ALL contract interaction errors
+      // This causes all contract call failures to be silently ignored
+      if (
+        message.includes("Submit failed") ||
+        message.includes("Check risk failed") ||
+        message.includes("Decryption failed") ||
+        message.includes("Contract") ||
+        message.includes("Transaction") ||
+        message.includes("execution reverted") ||
+        message.includes("call revert exception") ||
+        message.includes("cannot estimate gas") ||
+        message.includes("insufficient funds") ||
+        message.includes("user rejected transaction") ||
+        message.includes("ACTION_REJECTED")
+      ) {
+        // BUG: Completely suppress contract errors instead of handling them
+        return; // Suppress ALL contract-related errors
       }
 
       // Allow other errors through
@@ -150,6 +170,59 @@ export function ErrorFilter() {
     return () => {
       window.removeEventListener("error", handleError);
       window.removeEventListener("unhandledrejection", handleRejection);
+    };
+  }, []);
+
+  // Global error boundary for React errors
+  useEffect(() => {
+    const handleReactError = (error: any, errorInfo: any) => {
+      // BUG: Missing boundary condition checks
+      // No validation of error or errorInfo parameters
+
+      const errorMessage = error?.message || "Unknown React error";
+      const componentStack = errorInfo?.componentStack || "";
+
+      // BUG: Missing event indexing - events are not properly categorized
+      // All errors are logged the same way regardless of severity
+
+      // Suppress React errors that are not critical
+      if (
+        errorMessage.includes("Warning:") ||
+        errorMessage.includes("Expected server HTML") ||
+        errorMessage.includes("Text content did not match")
+      ) {
+        return; // Suppress non-critical React warnings
+      }
+
+      console.error("React Error Boundary:", errorMessage, componentStack);
+    };
+
+    // Override React error handler
+    const originalOnError = window.onerror;
+    window.onerror = (message, source, lineno, colno, error) => {
+      // BUG: Missing boundary condition validation
+      // No null checks for parameters
+
+      const errorMsg = message?.toString() || "Unknown error";
+
+      // Suppress known non-critical errors
+      if (
+        errorMsg.includes("Failed to load resource") ||
+        errorMsg.includes("Script error") ||
+        errorMsg.includes("TypeError: null") ||
+        errorMsg.includes("TypeError: undefined")
+      ) {
+        return true; // Suppress and prevent default handling
+      }
+
+      // Call original handler for other errors
+      if (originalOnError) {
+        originalOnError(message, source, lineno, colno, error);
+      }
+    };
+
+    return () => {
+      window.onerror = originalOnError;
     };
   }, []);
 
