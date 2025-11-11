@@ -74,6 +74,10 @@ export const useGlucoseCheck = (parameters: {
 
   const [glucoseHandle, setGlucoseHandle] = useState<string | undefined>(undefined);
   const [riskResultHandle, setRiskResultHandle] = useState<string | undefined>(undefined);
+  const [clearRiskResult, setClearRiskResult] = useState<ClearValueType | undefined>(
+    undefined
+  );
+  const clearRiskResultRef = useRef<ClearValueType>(undefined);
   const [isSubmitting, setIsSubmitting] = useState<boolean>(false);
   const [isChecking, setIsChecking] = useState<boolean>(false);
   const [isDecrypting, setIsDecrypting] = useState<boolean>(false);
@@ -88,6 +92,7 @@ export const useGlucoseCheck = (parameters: {
   const isCheckingRef = useRef<boolean>(isChecking);
   const isDecryptingRef = useRef<boolean>(isDecrypting);
 
+  const isDecrypted = riskResultHandle && riskResultHandle === clearRiskResult?.handle;
 
   const glucoseCheck = useMemo(() => {
     const c = getGlucoseCheckByChainId(chainId);
@@ -538,6 +543,7 @@ export const useGlucoseCheck = (parameters: {
     submitGlucose,
     checkRisk,
     decryptRiskResult,
+    isDecrypted,
     message,
     glucoseHandle,
     riskResultHandle,
