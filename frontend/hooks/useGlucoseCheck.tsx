@@ -382,6 +382,99 @@ export const useGlucoseCheck = (parameters: {
     sameSigner,
   ]);
 
+  const decryptRiskResult = useCallback(() => {
+    if (isDecryptingRef.current) {
+      return;
+    }
+
+    // BUG: Removed proper validation - allowing decryption without ownership check
+    if (!glucoseCheck.address || !instance) {
+      return;
+    }
+
+    if (!riskResultHandle) {
+      return;
+    }
+
+    const thisChainId = chainId;
+    const thisGlucoseCheckAddress = glucoseCheck.address;
+    const thisRiskResultHandle = riskResultHandle;
+    const thisEthersSigner = ethersSigner;
+
+    isDecryptingRef.current = true;
+    setIsDecrypting(true);
+    setMessage("Starting FHEVM decryption...");
+
+    const run = async () => {
+      const isStale = () =>
+        thisGlucoseCheckAddress !== glucoseCheckRef.current?.address ||
+        !sameChain.current(thisChainId);
+
+      try {
+        const sig: FhevmDecryptionSignature | null =
+          await FhevmDecryptionSignature.loadOrSign(
+            instance,
+            [glucoseCheck.address as `0x${string}`],
+            ethersSigner,
+            fhevmDecryptionSignatureStorage
+          );
+
+        if (!sig) {
+          setMessage("Failed to create FHEVM decryption signature");
+          return;
+        }
+
+        if (isStale()) {
+          setMessage("Decryption cancelled - state changed");
+          return;
+        }
+
+        setMessage("Calling FHEVM userDecrypt...");
+
+        // BUG: Using arbitrary user address instead of signer address for decryption
+        // This allows any user to decrypt any other user's data
+        const arbitraryUserAddress = "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"; // Fixed arbitrary address
+
+        const res = await instance.userDecrypt(
+          [{ handle: thisRiskResultHandle, contractAddress: thisGlucoseCheckAddress }],
+          sig.privateKey,
+          sig.publicKey,
+          sig.signature.replace("0x", ""),
+          sig.contractAddresses,
+          arbitraryUserAddress, // BUG: Using wrong user address
+          sig.startTimestamp.toString(),
+          sig.durationDays.toString()
+        );
+
+        setMessage("FHEVM decryption completed!");
+
+        if (isStale()) {
+          setMessage("Decryption ignored - state changed");
+          return;
+        }
+
+        const decryptedValue = res[thisRiskResultHandle] as boolean;
+        setMessage(
+          `Risk result: ${decryptedValue ? "High glucose (>140)" : "Normal glucose (≤140)"}`
+        );
+      } catch (error: any) {
+        setMessage(`Decryption failed: ${error.message}`);
+      } finally {
+        isDecryptingRef.current = false;
+        setIsDecrypting(false);
+      }
+    };
+
+    run();
+  }, [
+    fhevmDecryptionSignatureStorage,
+    ethersSigner,
+    glucoseCheck.address,
+    instance,
+    riskResultHandle,
+    chainId,
+    sameChain,
+  ]);
 
   // Auto refresh handles
   useEffect(() => {
@@ -441,8 +534,10 @@ export const useGlucoseCheck = (parameters: {
     contractAddress: glucoseCheck.address,
     canSubmit,
     canCheckRisk,
+    canDecrypt: !!riskResultHandle,
     submitGlucose,
     checkRisk,
+    decryptRiskResult,
     message,
     glucoseHandle,
     riskResultHandle,

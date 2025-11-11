@@ -221,13 +221,24 @@ export const GlucoseCheckDemo = () => {
         <p className="text-white/80 mb-4">
           Check if your glucose level is high (glucose {'>'} 140 mg/dL)
         </p>
-        <button
-          className={buttonClass}
-          onClick={handleCheckRisk}
-          disabled={!glucoseCheck.canCheckRisk}
-        >
-          {glucoseCheck.isChecking ? "Checking..." : "Check Risk"}
-        </button>
+        <div className="flex gap-4">
+          <button
+            className={buttonClass}
+            onClick={handleCheckRisk}
+            disabled={!glucoseCheck.canCheckRisk}
+          >
+            {glucoseCheck.isChecking ? "Checking..." : "Check Risk"}
+          </button>
+          {hasRiskResult && (
+            <button
+              className={buttonClass}
+              onClick={() => glucoseCheck.decryptRiskResult()}
+              disabled={!glucoseCheck.canDecrypt || glucoseCheck.isDecrypting}
+            >
+              {glucoseCheck.isDecrypting ? "Decrypting..." : "Decrypt Result"}
+            </button>
+          )}
+        </div>
       </div>
 
 
@@ -265,4 +276,5 @@ export const GlucoseCheckDemo = () => {
     </div>
   );
 };
+
 
