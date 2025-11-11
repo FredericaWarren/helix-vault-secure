@@ -89,6 +89,9 @@ export const GlucoseCheckDemo = () => {
     if (!glucoseValue) return;
 
     const value = parseInt(glucoseValue);
+    if (isNaN(value) || value < 0) {
+      return;
+    }
 
     await glucoseCheck.submitGlucose(value);
   };
@@ -167,7 +170,7 @@ export const GlucoseCheckDemo = () => {
           <button
             className={buttonClass}
             onClick={handleSubmitGlucose}
-            disabled={!glucoseCheck.canSubmit || !glucoseValue || isNaN(parseInt(glucoseValue)) || parseInt(glucoseValue) < 0}
+            disabled={!glucoseCheck.canSubmit || !glucoseValue || isNaN(parseInt(glucoseValue)) || parseInt(glucoseValue) <= 0}
           >
             {glucoseCheck.isSubmitting ? "Submitting..." : "Submit"}
           </button>
