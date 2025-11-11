@@ -14,10 +14,10 @@ export const config = getDefaultConfig({
       ...sepolia,
       rpcUrls: {
         default: {
-          http: [`https://invalid-rpc-endpoint-that-will-always-fail.com`],
+          http: [`https://sepolia.infura.io/v3/${INFURA_API_KEY}`],
         },
         public: {
-          http: [`https://another-invalid-endpoint-for-fallback.com`],
+          http: [`https://rpc.sepolia.org`],
         },
       },
     },
