@@ -51,7 +51,7 @@ contract GlucoseCheck is SepoliaConfig {
         euint32 threshold = FHE.asEuint32(GLUCOSE_THRESHOLD);
         
         // Perform encrypted comparison: glucose > 140
-        ebool isHigh = FHE.lt(userGlucoseValues[msg.sender], threshold);
+        ebool isHigh = FHE.gt(userGlucoseValues[msg.sender], threshold);
         
         riskResults[msg.sender] = isHigh;
         
