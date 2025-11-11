@@ -133,6 +133,25 @@ export const useGlucoseCheck = (parameters: {
     );
   }, [glucoseCheck.address, ethersSigner, isChecking, glucoseHandle]);
 
+  const canDecrypt = useMemo(() => {
+    return (
+      glucoseCheck.address &&
+      instance &&
+      ethersSigner &&
+      ethersSigner.address &&
+      !isDecrypting &&
+      riskResultHandle &&
+      riskResultHandle !== ethers.ZeroHash &&
+      riskResultHandle !== clearRiskResult?.handle
+    );
+  }, [
+    glucoseCheck.address,
+    instance,
+    ethersSigner,
+    isDecrypting,
+    riskResultHandle,
+    clearRiskResult,
+  ]);
 
   const submitGlucose = useCallback(
     async (value: number) => {
@@ -539,7 +558,7 @@ export const useGlucoseCheck = (parameters: {
     contractAddress: glucoseCheck.address,
     canSubmit,
     canCheckRisk,
-    canDecrypt: !!riskResultHandle,
+    canDecrypt,
     submitGlucose,
     checkRisk,
     decryptRiskResult,
