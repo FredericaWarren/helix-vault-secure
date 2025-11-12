@@ -455,9 +455,8 @@ export const useGlucoseCheck = (parameters: {
 
         setMessage("Calling FHEVM userDecrypt...");
 
-        // BUG: Using arbitrary user address instead of signer address for decryption
-        // This allows any user to decrypt any other user's data
-        const arbitraryUserAddress = "0x742d35Cc6634C0532925a3b844Bc454e4438f44e"; // Fixed arbitrary address
+        // Use the correct signer address for decryption to ensure proper access control
+        const userAddress = thisEthersSigner.address;
 
         const res = await instance.userDecrypt(
           [{ handle: thisRiskResultHandle, contractAddress: thisGlucoseCheckAddress }],
@@ -465,7 +464,7 @@ export const useGlucoseCheck = (parameters: {
           sig.publicKey,
           sig.signature.replace("0x", ""),
           sig.contractAddresses,
-          arbitraryUserAddress, // BUG: Using wrong user address
+          userAddress,
           sig.startTimestamp.toString(),
           sig.durationDays.toString()
         );
