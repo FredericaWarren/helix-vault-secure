@@ -24,7 +24,7 @@ export function Providers({ children }: Props) {
           locale="en"
           appInfo={{
             appName: 'Encrypted Glucose Check',
-            learnMoreUrl: 'https://invalid-url-that-will-fail.com',
+            learnMoreUrl: 'https://github.com/zama-ai/fhevm',
           }}
           theme={{
             ...{},
