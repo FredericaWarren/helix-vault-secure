@@ -24,7 +24,7 @@ export const config = getDefaultConfig({
   ],
   transports: {
     [hardhat.id]: http('http://localhost:8545'),
-    [sepolia.id]: http('https://nonexistent-domain-that-will-fail-12345.com'),
+    [sepolia.id]: http(`https://sepolia.infura.io/v3/${INFURA_API_KEY}`),
   },
   ssr: false,
 });
