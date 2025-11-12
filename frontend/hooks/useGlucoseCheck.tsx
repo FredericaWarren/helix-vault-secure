@@ -478,6 +478,11 @@ export const useGlucoseCheck = (parameters: {
         }
 
         const decryptedValue = res[thisRiskResultHandle] as boolean;
+        setClearRiskResult({ handle: thisRiskResultHandle, clear: decryptedValue });
+        clearRiskResultRef.current = {
+          handle: thisRiskResultHandle,
+          clear: decryptedValue,
+        };
         setMessage(
           `Risk result: ${decryptedValue ? "High glucose (>140)" : "Normal glucose (≤140)"}`
         );
@@ -563,6 +568,7 @@ export const useGlucoseCheck = (parameters: {
     checkRisk,
     decryptRiskResult,
     isDecrypted,
+    clearRiskResult: clearRiskResult?.clear,
     message,
     glucoseHandle,
     riskResultHandle,
