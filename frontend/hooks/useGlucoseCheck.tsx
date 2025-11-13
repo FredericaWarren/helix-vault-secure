@@ -334,7 +334,10 @@ export const useGlucoseCheck = (parameters: {
       return;
     }
 
-    // Removed validation check - allowing risk check without proper signer validation
+    if (!glucoseCheck.address || !ethersSigner || !ethersSigner.address) {
+      setMessage("Risk check failed: Invalid signer or contract configuration");
+      return;
+    }
 
     const thisChainId = chainId;
     const thisGlucoseCheckAddress = glucoseCheck.address;
