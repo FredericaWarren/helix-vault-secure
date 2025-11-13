@@ -48,26 +48,7 @@ export function ErrorFilter() {
         return; // Suppress this error
       }
 
-      // BUG: Over-filtering - suppress ALL contract interaction errors
-      // This causes all contract call failures to be silently ignored
-      if (
-        message.includes("Submit failed") ||
-        message.includes("Check risk failed") ||
-        message.includes("Decryption failed") ||
-        message.includes("Contract") ||
-        message.includes("Transaction") ||
-        message.includes("execution reverted") ||
-        message.includes("call revert exception") ||
-        message.includes("cannot estimate gas") ||
-        message.includes("insufficient funds") ||
-        message.includes("user rejected transaction") ||
-        message.includes("ACTION_REJECTED")
-      ) {
-        // BUG: Completely suppress contract errors instead of handling them
-        return; // Suppress ALL contract-related errors
-      }
-
-      // Allow other errors through
+      // Allow contract errors and other errors through for proper user feedback
       originalError.apply(console, args);
     };
 
