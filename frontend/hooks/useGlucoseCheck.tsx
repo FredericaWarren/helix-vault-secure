@@ -76,6 +76,7 @@ export const useGlucoseCheck = (parameters: {
 
   const [glucoseHandle, setGlucoseHandle] = useState<string | undefined>(undefined);
   const [riskResultHandle, setRiskResultHandle] = useState<string | undefined>(undefined);
+  const [hasGlucose, setHasGlucose] = useState<boolean>(false);
   const [clearRiskResult, setClearRiskResult] = useState<ClearValueType | undefined>(
     undefined
   );
@@ -569,6 +570,9 @@ export const useGlucoseCheck = (parameters: {
         const glucose = await glucoseCheckContract.getGlucose(ethersSigner.address);
         setGlucoseHandle(glucose);
 
+        const hasValue = await glucoseCheckContract.hasGlucoseValue(ethersSigner.address);
+        setHasGlucose(hasValue);
+
         const riskResult = await glucoseCheckContract.getRiskResult(ethersSigner.address);
         setRiskResultHandle(riskResult);
       } catch (error) {
@@ -594,6 +598,7 @@ export const useGlucoseCheck = (parameters: {
     clearRiskResult: clearRiskResult?.clear,
     glucoseHandle,
     riskResultHandle,
+    hasGlucose,
     isSubmitting,
     isChecking,
     isDecrypting,
