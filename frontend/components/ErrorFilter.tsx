@@ -5,9 +5,10 @@ import { useEffect } from "react";
 /**
  * Advanced error handling and filtering component
  * - Filters known console errors that don't affect functionality
- * - Handles contract interaction errors
+ * - Handles contract interaction errors with proper user feedback
  * - Manages network and connection issues
- * - Provides user-friendly error messages
+ * - Provides user-friendly error messages for debugging
+ * - Ensures critical errors are not suppressed
  */
 export function ErrorFilter() {
   useEffect(() => {
