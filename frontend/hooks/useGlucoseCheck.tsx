@@ -411,12 +411,14 @@ export const useGlucoseCheck = (parameters: {
       return;
     }
 
-    // BUG: Removed proper validation - allowing decryption without ownership check
-    if (!glucoseCheck.address || !instance) {
+    // Proper validation for decryption access control
+    if (!glucoseCheck.address || !instance || !ethersSigner || !ethersSigner.address) {
+      setMessage("Decryption failed: Invalid signer or contract configuration");
       return;
     }
 
     if (!riskResultHandle) {
+      setMessage("Decryption failed: No risk result available to decrypt");
       return;
     }
 
