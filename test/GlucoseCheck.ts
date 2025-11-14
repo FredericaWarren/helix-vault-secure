@@ -43,6 +43,10 @@ describe("GlucoseCheck", function () {
     // Expect initial glucose to be bytes32(0) after deployment,
     // (meaning the encrypted glucose value is uninitialized)
     expect(encryptedGlucose).to.eq(ethers.ZeroHash);
+
+    // Check hasGlucoseValue function
+    const hasGlucose = await glucoseCheckContract.hasGlucoseValue(signers.alice.address);
+    expect(hasGlucose).to.be.false;
   });
 
   it("submit glucose value and check if high (glucose > 140)", async function () {
@@ -58,6 +62,10 @@ describe("GlucoseCheck", function () {
       .connect(signers.alice)
       .submitGlucose(encryptedGlucose.handles[0], encryptedGlucose.inputProof);
     await tx.wait();
+
+    // Verify hasGlucoseValue returns true after submission
+    const hasGlucoseAfterSubmit = await glucoseCheckContract.hasGlucoseValue(signers.alice.address);
+    expect(hasGlucoseAfterSubmit).to.be.true;
 
     // Check risk
     tx = await glucoseCheckContract.connect(signers.alice).checkRisk();
