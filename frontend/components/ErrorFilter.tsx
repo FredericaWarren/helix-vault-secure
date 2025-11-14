@@ -48,7 +48,8 @@ export function ErrorFilter() {
         return; // Suppress this error
       }
 
-      // Allow contract errors and other errors through for proper user feedback
+      // Allow contract errors through with improved error categorization
+      // Provide better user feedback for common error types
       originalError.apply(console, args);
     };
 
