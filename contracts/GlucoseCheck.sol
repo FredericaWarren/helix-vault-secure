@@ -43,8 +43,9 @@ contract GlucoseCheck is SepoliaConfig {
     }
 
     /// @notice Check if a user has submitted a glucose value
-    /// @param user The address of the user
-    /// @return True if the user has submitted a glucose value
+    /// @dev This function allows checking glucose submission status without revealing the actual value
+    /// @param user The address of the user to check
+    /// @return True if the user has submitted a glucose value, false otherwise
     function hasGlucoseValue(address user) external view returns (bool) {
         return FHE.isInitialized(userGlucoseValues[user]);
     }
