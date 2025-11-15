@@ -149,6 +149,7 @@ export const GlucoseCheckDemo = () => {
 
   const hasGlucose = glucoseCheck.glucoseHandle && glucoseCheck.glucoseHandle !== ethers.ZeroHash;
   const hasRiskResult = glucoseCheck.riskResultHandle && glucoseCheck.riskResultHandle !== ethers.ZeroHash;
+  const hasSubmittedGlucose = glucoseCheck.hasGlucose;
 
   return (
     <div className="grid w-full gap-6 max-w-4xl mx-auto">
@@ -158,6 +159,11 @@ export const GlucoseCheckDemo = () => {
 
       <div className="col-span-full bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
         <h2 className="text-2xl font-bold text-white mb-4">Submit Glucose Value</h2>
+        {hasSubmittedGlucose && (
+          <div className="mb-4 p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
+            <p className="text-green-300 text-sm font-medium">✓ Glucose value submitted successfully</p>
+          </div>
+        )}
         <div className="flex gap-4">
           <input
             type="number"
