@@ -159,7 +159,26 @@ export const GlucoseCheckDemo = () => {
 
       <div className="col-span-full bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
         <h2 className="text-2xl font-bold text-white mb-4">Submit Glucose Value</h2>
-        {hasSubmittedGlucose && (
+        {glucoseCheck.message && (
+          <div className={`mb-4 p-3 rounded-lg ${
+            glucoseCheck.message.includes('failed') || glucoseCheck.message.includes('Failed')
+              ? 'bg-red-500/20 border border-red-500/30'
+              : glucoseCheck.message.includes('success') || glucoseCheck.message.includes('Success')
+              ? 'bg-green-500/20 border border-green-500/30'
+              : 'bg-blue-500/20 border border-blue-500/30'
+          }`}>
+            <p className={`text-sm font-medium ${
+              glucoseCheck.message.includes('failed') || glucoseCheck.message.includes('Failed')
+                ? 'text-red-300'
+                : glucoseCheck.message.includes('success') || glucoseCheck.message.includes('Success')
+                ? 'text-green-300'
+                : 'text-blue-300'
+            }`}>
+              {glucoseCheck.message}
+            </p>
+          </div>
+        )}
+        {hasSubmittedGlucose && !glucoseCheck.message && (
           <div className="mb-4 p-3 bg-green-500/20 border border-green-500/30 rounded-lg">
             <p className="text-green-300 text-sm font-medium">✓ Glucose value submitted successfully</p>
           </div>
