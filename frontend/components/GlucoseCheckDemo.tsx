@@ -89,7 +89,7 @@ export const GlucoseCheckDemo = () => {
     if (!glucoseValue) return;
 
     const value = parseInt(glucoseValue);
-    if (isNaN(value) || value < 0) {
+    if (isNaN(value) || value <= 0 || value > 1000) {
       return;
     }
 
@@ -188,14 +188,15 @@ export const GlucoseCheckDemo = () => {
             type="number"
             value={glucoseValue}
             onChange={(e) => setGlucoseValue(e.target.value)}
-            placeholder="Enter glucose value (mg/dL)"
+            placeholder="Enter glucose value (1-1000 mg/dL)"
             className="flex-1 px-4 py-2 rounded-lg bg-white/20 border border-white/30 text-white placeholder-white/60 focus:outline-none focus:ring-2 focus:ring-purple-500"
-            min="0"
+            min="1"
+            max="1000"
           />
           <button
             className={buttonClass}
             onClick={handleSubmitGlucose}
-            disabled={!glucoseCheck.canSubmit || !glucoseValue || isNaN(parseInt(glucoseValue)) || parseInt(glucoseValue) <= 0}
+            disabled={!glucoseCheck.canSubmit || !glucoseValue || isNaN(parseInt(glucoseValue)) || parseInt(glucoseValue) <= 0 || parseInt(glucoseValue) > 1000}
           >
             {glucoseCheck.isSubmitting ? "Submitting..." : "Submit"}
           </button>
