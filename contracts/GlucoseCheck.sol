@@ -11,6 +11,9 @@ import {SepoliaConfig} from "@fhevm/solidity/config/ZamaConfig.sol";
 contract GlucoseCheck is SepoliaConfig {
     // Threshold for high glucose (mg/dL)
     uint32 private constant GLUCOSE_THRESHOLD = 140;
+
+    // Maximum allowed glucose value (mg/dL)
+    uint32 private constant MAX_GLUCOSE_VALUE = 1000;
     
     // Mapping to store encrypted glucose values per user
     mapping(address => euint32) private userGlucoseValues;
@@ -26,7 +29,14 @@ contract GlucoseCheck is SepoliaConfig {
     /// @param inputProof The input proof for the encrypted value
     function submitGlucose(externalEuint32 encryptedGlucose, bytes calldata inputProof) external {
         euint32 glucose = FHE.fromExternal(encryptedGlucose, inputProof);
-        
+
+        // Validate glucose value is within reasonable range (0 < glucose <= MAX_GLUCOSE_VALUE)
+        ebool isValidRange = FHE.and(
+            FHE.lt(glucose, FHE.asEuint32(MAX_GLUCOSE_VALUE + 1)),
+            FHE.gt(glucose, FHE.asEuint32(0))
+        );
+        require(FHE.decrypt(isValidRange), "Glucose value out of valid range");
+
         userGlucoseValues[msg.sender] = glucose;
         
         FHE.allowThis(userGlucoseValues[msg.sender]);
