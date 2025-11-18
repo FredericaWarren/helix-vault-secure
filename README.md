@@ -8,11 +8,20 @@
 
 > **Privacy-First Healthcare Innovation**: A fully homomorphic encrypted glucose monitoring system built on Ethereum-compatible FHEVM, ensuring patient data privacy while enabling medical risk assessment.
 
-![Demo Video](./medic.mp4)
+🌐 **Live Demo**: [https://medicalprivate.vercel.app/](https://medicalprivate.vercel.app/)
+
+🎥 **Demo Video**: [Watch on GitHub](https://github.com/FredericaWarren/helix-vault-secure/blob/main/medic.mp4)
 
 ## 🌟 Overview
 
 The **Encrypted Glucose Check** is a groundbreaking decentralized application that demonstrates the power of Fully Homomorphic Encryption (FHE) in healthcare. Users can submit glucose readings that remain encrypted throughout the entire risk assessment process, yet still allow for meaningful medical analysis without ever revealing the actual values.
+
+This project implements a complete FHEVM-based solution with:
+- **Client-side encryption** using Zama's FHEVM SDK
+- **On-chain encrypted computation** for privacy-preserving risk assessment
+- **Selective decryption** with cryptographic signatures
+- **Multi-network deployment** (Sepolia testnet + local Hardhat)
+- **Modern Web3 frontend** with comprehensive error handling and validation
 
 ### Key Features
 
@@ -41,16 +50,34 @@ The **Encrypted Glucose Check** is a groundbreaking decentralized application th
 
 ```solidity
 contract GlucoseCheck is SepoliaConfig {
+    // Threshold for high glucose (mg/dL)
+    uint32 private constant GLUCOSE_THRESHOLD = 140;
+
     // Encrypted storage mappings
     mapping(address => euint32) private userGlucoseValues;
     mapping(address => ebool) private riskResults;
 
+    // Events
+    event GlucoseSubmitted(address indexed user);
+    event RiskAssessmentCompleted(address indexed user);
+
     // Core functions
-    function submitGlucose(euint32 encryptedGlucose, bytes proof) external;
+    function submitGlucose(externalEuint32 encryptedGlucose, bytes calldata inputProof) external;
     function checkRisk() external;  // Encrypted comparison: glucose > 140
+    function getGlucose(address user) external view returns (euint32);
     function getRiskResult(address user) external view returns (ebool);
 }
 ```
+
+### Contract Deployment
+
+**Sepolia Testnet**
+- **Contract Address**: `0xd68272712A56E9020290b520BAe958420ea47DCF`
+- **Network**: Ethereum Sepolia Testnet
+- **Block Explorer**: [View on Etherscan](https://sepolia.etherscan.io/address/0xd68272712A56E9020290b520BAe958420ea47DCF)
+- **FHEVM Protocol**: Zama FHEVM Sepolia (Protocol ID: 10001)
+- **Deployment Date**: November 2025
+- **Compiler**: Solidity 0.8.27
 
 ### FHEVM Integration
 
@@ -120,7 +147,8 @@ contract GlucoseCheck is SepoliaConfig {
    ```
 
 8. **Access the application**
-   - Open [http://localhost:3000](http://localhost:3000)
+   - **Live Deployment**: [https://medicalprivate.vercel.app/](https://medicalprivate.vercel.app/)
+   - **Local Development**: [http://localhost:3000](http://localhost:3000) (after running `npm run dev`)
    - Connect your MetaMask wallet
    - Start submitting encrypted glucose readings!
 
@@ -164,14 +192,32 @@ encrypted-glucose-check/
 │   └── GlucoseCheck.sol      # Main FHEVM contract
 ├── frontend/                  # Next.js React application
 │   ├── app/                   # Next.js 15 app router
+│   │   ├── layout.tsx         # Root layout with providers
+│   │   ├── page.tsx           # Main glucose check page
+│   │   ├── providers.tsx      # Web3 providers setup
+│   │   └── globals.css        # Global styles
 │   ├── components/            # Reusable React components
+│   │   ├── GlucoseCheckDemo.tsx # Main demo component
+│   │   ├── ErrorFilter.tsx    # Error filtering system
+│   │   └── ErrorNotDeployed.tsx # Deployment error component
 │   ├── hooks/                 # Custom React hooks
+│   │   ├── useGlucoseCheck.tsx # Main contract hook
+│   │   ├── useEthersSigner.ts # Ethers signer hook
+│   │   └── useInMemoryStorage.tsx # Local storage hook
 │   ├── fhevm/                 # FHEVM integration layer
+│   │   ├── useFhevm.tsx       # FHEVM instance hook
+│   │   ├── FhevmDecryptionSignature.ts # Decryption signatures
+│   │   └── internal/          # FHEVM internal modules
 │   └── config/                # Web3 configuration
+│       └── wagmi.ts           # Wagmi/RainbowKit config
 ├── test/                      # Contract tests
 ├── scripts/                   # Deployment scripts
 ├── tasks/                     # Hardhat tasks
-└── deployments/              # Deployment artifacts
+├── deployments/              # Deployment artifacts
+│   ├── sepolia/              # Sepolia deployment data
+│   └── localhost/            # Local deployment data
+├── medic.mp4                 # Demo video
+└── README.md                 # This documentation
 ```
 
 ### Available Scripts
