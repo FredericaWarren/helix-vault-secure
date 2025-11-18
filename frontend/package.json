@@ -12,7 +12,8 @@
     "ishhrunning": "node ./scripts/is-hardhat-node-running.mjs",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "@rainbow-me/rainbowkit": "^2.0.0",
