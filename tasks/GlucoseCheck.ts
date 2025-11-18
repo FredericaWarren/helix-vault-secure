@@ -2,6 +2,9 @@ import { FhevmType } from "@fhevm/hardhat-plugin";
 import { task } from "hardhat/config";
 import type { TaskArguments } from "hardhat/types";
 
+// Task definitions for GlucoseCheck contract interaction
+// Provides convenient CLI commands for testing and development
+
 /**
  * Tutorial: Deploy and Interact Locally (--network localhost)
  * ===========================================================
