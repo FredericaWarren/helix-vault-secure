@@ -8,7 +8,7 @@
 
 > **Privacy-First Healthcare Innovation**: A fully homomorphic encrypted glucose monitoring system built on Ethereum-compatible FHEVM, ensuring patient data privacy while enabling medical risk assessment.
 
-🌐 **Live Demo**: [https://medicalprivate.vercel.app/](https://medicalprivate.vercel.app/)
+🌐 **Live Demo**: [https://helix-vault-secure-eaakf.vercel.app/](https://helix-vault-secure-eaakf.vercel.app/)
 
 🎥 **Demo Video**: [Watch on GitHub](https://github.com/FredericaWarren/helix-vault-secure/blob/main/medic.mp4)
 
@@ -147,7 +147,7 @@ contract GlucoseCheck is SepoliaConfig {
    ```
 
 8. **Access the application**
-   - **Live Deployment**: [https://medicalprivate.vercel.app/](https://medicalprivate.vercel.app/)
+   - **Live Deployment**: [https://helix-vault-secure-eaakf.vercel.app/](https://helix-vault-secure-eaakf.vercel.app/)
    - **Local Development**: [http://localhost:3000](http://localhost:3000) (after running `npm run dev`)
    - Connect your MetaMask wallet
    - Start submitting encrypted glucose readings!
